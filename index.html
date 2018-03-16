@@ -199,7 +199,9 @@
 				textfield.y = 400;
 				app.stage.addChild(textfield);
 				
-				document.getElementsByTagName('meta')[5] = canvas.toDataURL('image/jpg');
+				let dataURL = canvas.toDataURL('image/jpg');
+				console.log(dataURL);
+				document.getElementsByTagName('meta')[5].setAtribute('content', dataURL);
 			}
 		</script>
 	</body>
