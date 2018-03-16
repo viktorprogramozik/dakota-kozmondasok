@@ -200,8 +200,10 @@
 				app.stage.addChild(textfield);
 				
 				let dataURL = canvas.toDataURL('image/jpg');
-				console.log(dataURL);
-				document.getElementsByTagName('meta')[5].content = dataURL;
+				//console.log(dataURL);
+				let meta = document.getElementsByTagName('meta')[5];
+				meta.content = dataURL;
+				console.log(meta);
 			}
 		</script>
 	</body>
