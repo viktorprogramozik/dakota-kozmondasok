@@ -7,7 +7,7 @@
 
 		<meta property="og:url" content="https://viktorprogramozik.github.io/dakota-kozmondasok">
 		<meta property="og:title" content="Dakota közmondások">
-		<meta property="og:image" content="https://viktorprogramozik.github.io/dakota-kozmondasok/screenshot.html">
+		<meta property="og:image" content="https://viktorprogramozik.github.io/dakota-kozmondasok/screenshot.jpg">
 
 		<title>Dakota közmondások</title>
 
@@ -105,7 +105,6 @@
 		</div>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.0/pixi.min.js"></script>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-114617805-1"></script>
 		<script>
 			window.dataLayer = window.dataLayer || [];
@@ -116,8 +115,6 @@
 
 		<script src="proverbs.js"></script>
 		<script>
-			let proverb = '';
-
 			function resize() {
 				let bg = document.getElementById('bg');
 				let box = document.getElementById('box');
@@ -157,54 +154,12 @@
 				else {
 					str = decodeURI(window.location.hash).substr(1);
 				}
-
-				proverb = str;
+				
 				txt.innerHTML = str;
 			}
 
 			window.onhashchange = hashChange;
 			hashChange();
-
-			let app = new PIXI.Application({width: 1280, height: 720});
-			let canvas = app.view;
-			//document.body.appendChild(canvas);
-			PIXI.loader.add("background.jpg").load(setup);
-
-			function setup() {
-				let sprite = new PIXI.Sprite(
-					PIXI.loader.resources["background.jpg"].texture
-				);
-
-				app.stage.addChild(sprite);
-
-				let textStyle = {
-					fontFamily: 'Tillana',
-					fontSize: 38,
-					fontWeight: 'bold',
-					fill: 0x000000,
-					wordWrap: true,
-					wordWrapWidth: 630,
-					align : 'center'
-				};
-
-				let textfield = new PIXI.Text(proverb, textStyle);
-				let rect = textfield.getBounds();
-				textfield.x = 115 + (650 - rect.width) * 0.5;
-				textfield.y = 130;
-				app.stage.addChild(textfield);
-				
-				textStyle.fontSize = 18;
-				textfield = new PIXI.Text('/Dakota hátrafelé nyilazók legfőbbika/', textStyle);
-				textfield.x = 370;
-				textfield.y = 400;
-				app.stage.addChild(textfield);
-				
-				let dataURL = canvas.toDataURL('image/jpg');
-				//console.log(dataURL);
-				let meta = document.getElementsByTagName('meta')[5];
-				//meta.content = dataURL;
-				console.log(meta);
-			}
 		</script>
 	</body>
 </html>
