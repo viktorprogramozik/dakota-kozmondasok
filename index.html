@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="hu">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+		<meta property="og:url" content="https://viktorprogramozik.github.io/dakota-kozmondasok">
+		<meta property="og:title" content="Dakota közmondások">
+		<meta property="og:image" content="https://viktorprogramozik.github.io/dakota-kozmondasok/screenshot.jpg">
+
+		<title>Dakota közmondások</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Tillana:400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				background-color: #d0bea8;
+				min-width: 615px;
+			}
+
+			h1 {
+				margin: 1em auto;
+				text-align: center;
+				text-transform: uppercase;
+				font-family: 'Tillana', cursive;
+			}
+
+			#bg {
+				border: 1px solid transparent;
+				background: url('background.jpg') no-repeat top center;
+				background-size: contain;
+				resize: both;
+				font-family: 'Tillana', cursive;
+			}
+
+			#box {
+				font-weight: bold;
+				overflow: hidden;
+				font-size: 16pt;
+				text-align: center;
+			}
+
+			#box #txt {
+				overflow: hidden;
+			}
+
+			#box #ov {
+				font-size: 10pt;
+				display: block;
+				width: 100%;
+				text-align: right;
+				overflow: hidden;
+			}
+
+			.containered {
+				margin-top: 2em;
+				color: black;
+			}
+
+			.containered div {
+				margin-bottom: 2em;
+			}
+
+			.containered i {
+				color: #ffffff;
+				background-color: rgba(0, 0, 0, 0.75);
+				padding: 1em;
+			}
+
+			.containered i a {
+				font-weight: bolder;
+			}
+
+			canvas {
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Dakota közmondások</h1>
+
+		<div id="bg">
+			<div id="box">
+				<div id="txt"></div>
+				<div id="ov">/Dakota hátrafelé nyilazók legfőbbika/</div>
+			</div>
+		</div>
+		
+		<div class="containered text-center">
+			<div>
+				<a href="#" class="btn btn-danger" onclick="window.location.reload();">Következő közmondás</a>
+			</div>
+
+			<div>
+				<i>Osztd meg az alkalmazást a <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=viktorprogramozik.github.io/dakota-kozmondasok&picture=viktorprogramozik.github.io/dakota-kozmondasok/screenshot.jpg">Facebookon</a>, ha tetszett valamelyik közmondás!</i>
+			</div>
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.0/pixi.min.js"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-114617805-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-114617805-1');
+		</script>
+
+		<script src="proverbs.js"></script>
+		<script>
+			let proverb = '';
+
+			function resize() {
+				let bg = document.getElementById('bg');
+				let box = document.getElementById('box');
+				let txt = document.getElementById('txt');
+				let ov = document.getElementById('ov');
+				
+				let sc = window.innerWidth / 1280;
+				let offset = Math.max(0, window.innerWidth - 1280) * 0.5;
+				sc = Math.min(1, Math.max(0.48, sc));
+				
+				bg.style.height = (720 * sc) + 'px';
+
+				box.style.padding = (10 * sc) + 'px';
+				box.style.marginLeft = (offset + 112 * sc) + 'px';
+				box.style.marginTop = (112 * sc) + 'px';
+				box.style.width = (630 * sc) + 'px';
+
+				let height = (305 * sc);
+				box.style.height = height + 'px';
+
+				txt.style.height = (height * 0.85) + 'px';
+			}
+
+			window.onresize = resize;
+
+			resize();
+
+			function hashChange() {
+				let txt = document.getElementById('txt');
+				let str = window.location.hash;
+
+				if (!str) {
+					let rand = proverbs.length - 1;
+					rand = Math.round(rand * Math.random());
+					str = proverbs[rand];
+				}
+				else {
+					str = decodeURI(window.location.hash).substr(1);
+				}
+
+				proverb = str;
+				txt.innerHTML = str;
+			}
+
+			window.onhashchange = hashChange;
+			hashChange();
+
+			let app = new PIXI.Application({width: 1280, height: 720});
+			let canvas = app.view;
+			document.body.appendChild(canvas);
+			PIXI.loader.add("background.jpg").load(setup);
+
+			function setup() {
+				let sprite = new PIXI.Sprite(
+					PIXI.loader.resources["background.jpg"].texture
+				);
+
+				app.stage.addChild(sprite);
+
+				let textStyle = {
+					fontFamily: 'Tillana',
+					fontSize: 38,
+					fontWeight: 'bold',
+					fill: 0x000000,
+					wordWrap: true,
+					wordWrapWidth: 630,
+					align : 'center'
+				};
+
+				let textfield = new PIXI.Text(proverb, textStyle);
+				let rect = textfield.getBounds();
+				textfield.x = 115 + (650 - rect.width) * 0.5;
+				textfield.y = 130;
+				app.stage.addChild(textfield);
+				
+				textStyle.fontSize = 18;
+				textfield = new PIXI.Text('/Dakota hátrafelé nyilazók legfőbbika/', textStyle);
+				textfield.x = 370;
+				textfield.y = 400;
+				app.stage.addChild(textfield);
+				
+				document.getElementsByTagName('meta')[5] = canvas.toDataURL('image/png');
+			}
+		</script>
+	</body>
+</html>
